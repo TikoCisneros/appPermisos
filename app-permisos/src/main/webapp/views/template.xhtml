@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:b="http://bootsfaces.net/ui">
+<h:head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+	<title><ui:insert name="titulo">Template</ui:insert></title>
+</h:head>
+<h:body>
+	<b:navBar brand="SGUP" inverse="true" brandHref="index.xhtml">
+		<b:navbarLinks>
+			<b:navbarLinks>
+				<c:forEach var="t" items="#{sesionBean.menu}">
+					<b:dropMenu value="#{t.nombre}">
+						<c:forEach var="i" items="#{t.lstLinks}">
+							<b:navLink value="#{i.nombre}" href="#{i.link}" />
+						</c:forEach>
+					</b:dropMenu>
+				</c:forEach>
+				<b:dropMenu value="Ayuda">
+					<b:navLink value="Acerca de" href="#" onclick="PF('dlg').show();"/>
+				</b:dropMenu>
+				<ui:insert name="menu"></ui:insert>
+			</b:navbarLinks>
+			<ui:insert name="menu"></ui:insert>
+		</b:navbarLinks>
+		<p class="navbar-text pull-right">
+			<strong>#{sesionBean.usuLogin}</strong>&nbsp;|&nbsp; <a
+				class="navbar-link" rel="nofollow" onclick="PF('cs').show();">Cerrar
+				sesión</a>
+		</p>
+	</b:navBar>
+	<b:container>
+		<ui:insert name="contenido"></ui:insert>
+		<h:form>
+			<p:confirmDialog header="Confirmación"
+				message="Está seguro de salir del sistema?" closable="false"
+				showEffect="fade" hideEffect="explode" widgetVar="cs">
+				<p:commandButton value="Yes" styleClass="ui-confirmdialog-yes"
+					icon="ui-icon-check" action="#{sesionBean.logout()}"
+					oncomplete="PF('cs').hide();" />
+				<p:commandButton value="No" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					onclick="PF('cs').hide();" />
+			</p:confirmDialog>
+		</h:form>
+	</b:container>
+	<h:form>
+		<p:dialog header="Acerca de la Aplicación" widgetVar="dlg" modal="true" resizable="false"
+			height="60" width="360">
+			<h3>Desarrollador: Luis Alberto Cisneros G&oacute;mez</h3>
+		</p:dialog>
+	</h:form>
+</h:body>
+</html>

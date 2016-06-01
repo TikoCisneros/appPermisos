@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="titulo">
+        Gesti&oacute;n de M&oacute;dulos
+    </ui:define>
+	<ui:define name="contenido">
+		<h:form id="frmg">
+			<p:messages closable="true" id="msj"></p:messages>
+			<center>
+				<h1>M&Oacute;DULOS</h1>
+			</center>
+			<b:row>
+				<b:column span="1">
+					<b:commandButton value="Nuevo" iconAwesome="file-o"	action="#{modulosBean.nuevo()}" />
+				</b:column>
+				<b:column span="1">
+					<b:commandButton value="Volver" iconAwesome="angle-left" action="index?faces-redirect=true" />
+				</b:column>
+			</b:row>
+		</h:form>
+		<br />
+		<h:form id="frmlm">
+			<b:panel title="Listado" look="primary">
+				<p:dataTable id="tbb" value="#{modulosBean.listModulos}" var="md" rows="8" emptyMessage="Sin Datos"
+				scrollable="true" scrollRows="20" liveScroll="true" paginator="true" 
+   				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+					<p:column filterBy="#{md.appAplicacione.aplNombre}" headerText="APLICACI&Oacute;N" width="140">
+						<h:outputText value="#{md.appAplicacione.aplNombre}"></h:outputText>
+					</p:column>
+					<p:column filterBy="#{md.modNombre}" filterMatchMode="contains" headerText="NOMBRE" width="100">
+						<h:outputText value="#{md.modNombre}"></h:outputText>
+					</p:column>
+					<p:column filterBy="#{md.modOrden}" headerText="ORDEN" width="80">
+						<h:outputText value="#{md.modOrden}"></h:outputText>
+					</p:column>
+					<p:column headerText="ESTADO" width="80">
+						<h:outputText value="#{md.modEstado}"></h:outputText>
+					</p:column>
+					<p:column headerText="OPCIONES" width="100">
+						<p:commandButton id="btnE" icon="ui-icon-pencil" update=":frmmod" action="#{modulosBean.cargarDatos(md)}">
+							<p:tooltip for="btnE" value="Editar M&oacute;dulo" trackMouse="true" />
+						</p:commandButton>
+					</p:column>
+   				</p:dataTable>
+   			</b:panel>
+		</h:form>
+		<p:dialog header="Formulario de M&oacute;dulos" widgetVar="dlgmod" width="500" modal="true" resizable="false" closable="false"
+			position="top">
+			<h:form id="frmmod">
+				<p:messages closable="true" id="modmsj"></p:messages>
+				<b:row style="margin-bottom:10px;">
+					<b:column col-xs="3"><h:outputText value="Aplicaci&oacute;n*" /></b:column>
+					<b:column col-xs="9">
+						<p:selectOneMenu value="#{modulosBean.aplicacion}" filter="true" filterMatchMode="contains" 
+							style="width:343px" disabled="#{modulosBean.edicion}">
+							<p:ajax listener="#{modulosBean.sugerirOrden()}" update="frmmod:ord"/>
+							<f:selectItems value="#{modulosBean.listApps()}"/>
+						</p:selectOneMenu>
+					</b:column>
+				</b:row>
+				<b:row>
+					<b:column col-xs="3"><h:outputText value="Nombre*" /></b:column>
+					<b:column col-xs="9"><b:inputText value="#{modulosBean.nombre}" required="true" requiredMessage="Campo nombre requerido"/></b:column>
+				</b:row>
+				<b:row>
+					<b:column col-xs="3"><h:outputText value="Orden*" /></b:column>
+					<b:column col-xs="9"><b:inputText id="ord" value="#{modulosBean.orden}" required="true" requiredMessage="Campo orden requerido"/></b:column>
+				</b:row>
+				<b:row style="margin-bottom:10px;">
+					<b:column col-xs="3"><h:outputText value="Descripci&oacute;n*" /></b:column>
+					<b:column col-xs="9">
+						<p:inputTextarea value="#{modulosBean.descripcion}" required="true" requiredMessage="Campo descripciÃ³n requerido" style="width:343px"/>
+					</b:column>
+				</b:row>
+				<b:row rendered="#{modulosBean.edicion}">
+					<b:column col-xs="3"><h:outputText value="Estado" /></b:column>
+					<b:column col-xs="9">
+						<b:selectOneMenu value="#{modulosBean.estado}">
+							<f:selectItems value="#{modulosBean.listEstados()}"/>
+						</b:selectOneMenu>
+					</b:column>
+				</b:row>
+				<b:row>
+					<b:column col-xs="2">
+						<p:commandButton value="Aceptar" actionListener="#{modulosBean.addModModulos()}" style="padding: .4em 0em;" 
+	    				styleClass="btn-default" update="frmmod :frmmod:modmsj :frmg:msj :frmlm"/>
+					</b:column>
+					<b:column col-xs="2">
+						<h:commandButton type="button" value="Cancelar" actionListener="#{modulosBean.cancelar()}" 
+			    			styleClass="btn btn-default">
+						    <f:ajax />
+						</h:commandButton>
+					</b:column>
+				</b:row>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>
+</html>

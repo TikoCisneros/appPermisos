@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="titulo">
+        Gesti&oacute;n de Perfiles
+    </ui:define>
+	<ui:define name="contenido">
+		<h:form id="frmg">
+			<p:messages closable="true" id="msj"></p:messages>
+			<center>
+				<h1>PERFILES</h1>
+			</center>
+			<b:row>
+				<b:column span="1">
+					<b:commandButton value="Nuevo" iconAwesome="file-o"	action="#{perfilesBean.nuevo()}" />
+				</b:column>
+				<b:column span="1">
+					<b:commandButton value="Volver" iconAwesome="angle-left" action="index?faces-redirect=true" />
+				</b:column>
+			</b:row>
+		</h:form>
+		<br />
+		<h:form id="frmlp">
+			<b:panel title="Listado" look="primary">
+				<p:dataTable id="tbb" value="#{perfilesBean.listPerfiles}" var="p" rows="8" emptyMessage="Sin Datos"
+				scrollable="true" scrollRows="20" liveScroll="true" paginator="true" 
+   				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+					<p:column filterBy="#{p.perNombre}" filterMatchMode="contains" headerText="NOMBRE" width="100">
+						<h:outputText value="#{p.perNombre}"></h:outputText>
+					</p:column>
+					<p:column headerText="DESCRIPCI&Oacute;N" width="300">
+						<h:outputText value="#{p.perDescripcion}"></h:outputText>
+					</p:column>
+					<p:column headerText="ESTADO" width="80">
+						<h:outputText value="#{p.perEstado}"></h:outputText>
+					</p:column>
+					<p:column headerText="OPCIONES" width="80">
+						<p:commandButton id="btnE" icon="ui-icon-pencil" update=":frmper" action="#{perfilesBean.cargarDatos(p)}">
+							<p:tooltip for="btnE" value="Editar Perfil" trackMouse="true" />
+						</p:commandButton>
+					</p:column>
+   				</p:dataTable>
+   			</b:panel>
+		</h:form>
+		<p:dialog header="Formulario de Perfiles" widgetVar="dlgperf" width="500" modal="true" resizable="false" closable="false"
+			position="top">
+			<h:form id="frmper">
+				<p:messages closable="true" id="permsj"></p:messages>
+				<b:row>
+					<b:column col-xs="3"><h:outputText value="Nombre*" /></b:column>
+					<b:column col-xs="9"><b:inputText value="#{perfilesBean.nombre}" required="true" requiredMessage="Campo nombre requerido"/></b:column>
+				</b:row>
+				<b:row style="margin-bottom:10px;">
+					<b:column col-xs="3"><h:outputText value="Descripci&oacute;n*" /></b:column>
+					<b:column col-xs="9">
+						<p:inputTextarea value="#{perfilesBean.descripcion}" required="true" requiredMessage="Campo descripciÃ³n requerido" style="width:343px"/>
+					</b:column>
+				</b:row>
+				<b:row rendered="#{perfilesBean.edicion}">
+					<b:column col-xs="3"><h:outputText value="Estado" /></b:column>
+					<b:column col-xs="9">
+						<b:selectOneMenu value="#{perfilesBean.estado}">
+							<f:selectItems value="#{perfilesBean.listEstados()}"/>
+						</b:selectOneMenu>
+					</b:column>
+				</b:row>
+				<b:row>
+					<b:column col-xs="2">
+						<p:commandButton value="Aceptar" actionListener="#{perfilesBean.addModPerfil()}" style="padding: .4em 0em;" 
+	    				styleClass="btn-default" update="frmper :frmg:msj :frmlp"/>
+					</b:column>
+					<b:column col-xs="2">
+						<h:commandButton type="button" value="Cancelar" actionListener="#{perfilesBean.cancelar()}" 
+			    			styleClass="btn btn-default">
+						    <f:ajax />
+						</h:commandButton>
+					</b:column>
+				</b:row>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>
+</html>

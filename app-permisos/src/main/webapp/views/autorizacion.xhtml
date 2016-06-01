@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="titulo">
+        Asignaci&oacute;n Usuario Aplicaciones
+    </ui:define>
+	<ui:define name="contenido">
+		<h:form id="frmua">
+			<p:messages id="growl" closable="true"/>
+			<b:row>
+				<b:column span="1">
+					<b:commandButton value="Volver" iconAwesome="angle-left" action="index?faces-redirect=true" />
+				</b:column>
+			</b:row>
+			<b:panel title="Asignaci&oacute;n de Aplicaciones a Autorizadores" look="primary">
+				<b:row>
+					<b:column col-xs="2"><h:outputText value="Usuario*" /></b:column>
+					<b:column col-xs="4">
+						<p:autoComplete id="acUsuario" minQueryLength="2"
+							value="#{autorizacionBean.usuario}"
+							completeMethod="#{autorizacionBean.completeUsuario}" 
+							var="c" itemValue="#{c}"
+							itemLabel="#{c.usuLogin}" 
+							converter="usuarioConverter"
+							forceSelection="false" inputStyle="width:200px; padding:8px; font-size:14px;margin-bottom:15px;">
+							<p:column><h:outputText value="#{c.usuLogin}" /></p:column>
+							<p:column style="width:200px"><h:outputText value="#{c.perId}" /></p:column>
+							<f:ajax event="itemSelect" listener="#{autorizacionBean.cargarDatosUsuario()}" render="pnom growl libre asig"/>
+						</p:autoComplete>
+					</b:column>
+					<b:column col-xs="6">
+						<h:outputText id="pnom" value="#{autorizacionBean.usuario.perId}" />
+					</b:column>
+				</b:row>
+				<center>
+					<b:row>
+						<b:column span="2" />
+						<b:column span="3">
+							<h:panelGrid columns="1">
+								<h:outputLabel value="Aplicaciones Libres" style="text-align:center;width:100%;"/>
+								<p:selectOneListbox id="libre" value="#{autorizacionBean.appIdLibre}" style="width:270px;height:300px;"
+									filter="true" filterMatchMode="contains">
+									<f:selectItems value="#{autorizacionBean.appsLibres}" var="art" itemLabel="#{art.aplNombre}" itemValue="#{art.aplId}"/>
+								</p:selectOneListbox>
+							</h:panelGrid>
+						</b:column>
+						<b:column span="2">
+							<h:panelGrid columns="2" style="margin:40px 0px;">
+								<p:commandButton icon="ui-icon-triangle-1-w" style="padding:.4em;margin-left:15px;" styleClass="btn btn-default"
+								    update="frmua"	actionListener="#{autorizacionBean.quitarAsignacion()}"/>
+								<p:commandButton icon="ui-icon-triangle-1-e" style="padding:.4em;margin-left:25px;" styleClass="btn btn-default"
+									update="frmua" actionListener="#{autorizacionBean.crearAsignacion()}"/>
+							</h:panelGrid>
+						</b:column>
+						<b:column span="3">
+							<h:panelGrid columns="1">
+								<h:outputLabel value="Aplicaciones Asignadas" style="text-align:center;width:100%;"/>
+								<p:selectOneListbox id="asig" value="#{autorizacionBean.appIdAsig}" style="width:270px;height:300px;"
+									filter="true" filterMatchMode="contains">
+									<f:selectItems value="#{autorizacionBean.appsAsig}" var="art" itemLabel="#{art.aplNombre}" itemValue="#{art.aplId}"/>
+								</p:selectOneListbox>
+							</h:panelGrid>
+						</b:column>
+						<b:column span="2" />
+					</b:row>
+				</center>
+			</b:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

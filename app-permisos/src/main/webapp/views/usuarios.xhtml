@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="titulo">
+        Gesti&oacute;n de Usuarios
+    </ui:define>
+	<ui:define name="contenido">
+		<h:form id="frmg">
+			<p:messages closable="true" id="msj"></p:messages>
+			<center>
+				<h1>USUARIOS</h1>
+			</center>
+			<b:row>
+				<b:column span="1">
+					<b:commandButton value="Nuevo" iconAwesome="file-o"	action="#{usuarioBean.nuevo()}" />
+				</b:column>
+				<b:column span="1">
+					<b:commandButton value="Volver" iconAwesome="angle-left" action="index?faces-redirect=true" />
+				</b:column>
+			</b:row>
+		</h:form>
+		<br />
+		<h:form id="frmlu">
+			<b:panel title="Listado" look="primary">
+				<p:dataTable id="tbb" value="#{usuarioBean.listaUsrs}" var="usr" rows="8" emptyMessage="Sin Datos"
+				scrollable="true" scrollRows="20" liveScroll="true" paginator="true" 
+   				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+					<p:column headerText="DNI PERSONA" width="100">
+						<h:outputText value="#{usr.perId}"></h:outputText>
+					</p:column>
+					<p:column filterBy="#{usr.usuLogin}" filterMatchMode="contains" headerText="ALIAS" width="150">
+						<h:outputText value="#{usr.usuLogin}"></h:outputText>
+					</p:column>
+					<p:column headerText="ESTADO" width="100">
+						<h:outputText value="#{usr.usuEstado}"></h:outputText>
+					</p:column>
+					<p:column headerText="OPCIONES" width="100">
+						<p:commandButton id="btnE" icon="ui-icon-pencil" update=":frmeu" action="#{usuarioBean.cargarDatos(usr)}">
+							<p:tooltip for="btnE" value="Editar Usuario" trackMouse="true" />
+						</p:commandButton>
+					</p:column>
+   				</p:dataTable>
+   			</b:panel>
+		</h:form>
+		<p:dialog header="Ingreso de Usuario" widgetVar="dlgnu" width="500" modal="true" resizable="false" closable="false" position="top">
+			<h:form id="frmnu">
+				<p:messages closable="true" id="nmsj"></p:messages>
+				<b:row>
+					<b:column col-xs="3"><h:outputText value="Persona DNI*" /></b:column>
+					<b:column col-xs="9">
+					<b:inputText value="#{usuarioBean.persona}" required="true" requiredMessage="Persona requerida"/>
+					</b:column>
+				</b:row>
+				<b:row style="font-style: oblique; color: #317eac; margin-top: 10px; margin-bottom: 10px;">
+					<b:column col-xs="3"><h:outputText value="Datos:" /></b:column>
+					<b:column col-xs="9"><h:outputText id="pnom" value="NO SE MUESTRA" /></b:column>
+				</b:row>
+				<b:row>
+					<b:column col-xs="3"><h:outputText value="Alias*" /></b:column>
+					<b:column col-xs="9"><b:inputText value="#{usuarioBean.alias}" required="true" requiredMessage="Campo alias requerido"/></b:column>
+				</b:row>
+				<b:row>
+					<b:column col-xs="3"><h:outputText value="Password*" /></b:column> 
+					<b:column col-xs="9"><b:inputSecret value="#{usuarioBean.password}" required="true" requiredMessage="Campo password requerido"/></b:column>
+				</b:row>
+				<b:row>
+					<b:column col-xs="3"><h:outputText value="Confirmaci&oacute;n*" /></b:column>
+					<b:column col-xs="9"><b:inputSecret value="#{usuarioBean.cpassword}" required="true" requiredMessage="Campo confirmaciÃ³n requerido"/></b:column>
+				</b:row>
+				<b:row>
+					<b:column col-xs="2">
+						<p:commandButton value="Aceptar" actionListener="#{usuarioBean.ingresarUsuario()}" style="padding: .4em 0em;" 
+	    				styleClass="btn-default" update="frmnu :frmnu:nmsj :frmg:msj :frmlu"/>
+					</b:column>
+					<b:column col-xs="2">
+						<h:commandButton type="button" value="Cancelar" actionListener="#{usuarioBean.cancelar()}" 
+			    			styleClass="btn btn-default">
+						    <f:ajax />
+						</h:commandButton>
+					</b:column>
+				</b:row>
+			</h:form>
+		</p:dialog>
+		<p:dialog header="Edici&oacute;n de Usuario" widgetVar="dlgeu" width="500" modal="true" resizable="false" closable="false" position="top">
+			<h:form id="frmeu">
+				<p:messages closable="true" id="emsj"></p:messages>
+				<b:row>
+					<b:column col-xs="3"><h:outputText value="Persona DNI" /></b:column>
+					<b:column col-xs="9"><h:outputText id="pnom" value="#{usuarioBean.persona}" /></b:column>
+				</b:row>
+				<b:row style="margin-top: 10px;">
+					<b:column col-xs="3"><h:outputText value="Alias" /></b:column>
+					<b:column col-xs="9"><h:outputText value="#{usuarioBean.alias}" /></b:column>
+				</b:row>
+				<b:row style="margin-top: 10px;">
+					<b:column col-xs="3"><h:outputText value="Password" /></b:column> 
+					<b:column col-xs="9"><b:inputSecret value="#{usuarioBean.password}"/></b:column>
+				</b:row>
+				<b:row>
+					<b:column col-xs="3"><h:outputText value="Confirmaci&oacute;n" /></b:column>
+					<b:column col-xs="9"><b:inputSecret value="#{usuarioBean.cpassword}"/></b:column>
+				</b:row>
+				<b:row>
+					<b:column col-xs="3"><h:outputText value="Estado" /></b:column>
+					<b:column col-xs="9">
+						<b:selectOneMenu value="#{usuarioBean.estado}">
+							<f:selectItems value="#{usuarioBean.listEstados()}"/>
+						</b:selectOneMenu>
+					</b:column>
+				</b:row>
+				<b:row>
+					<b:column col-xs="2">
+						<p:commandButton value="Aceptar" actionListener="#{usuarioBean.editarUsuario()}" style="padding: .4em 0em;" 
+	    				styleClass="btn-default" update="frmeu :frmeu:emsj :frmg:msj :frmlu"/>
+					</b:column>
+					<b:column col-xs="2">
+						<h:commandButton type="button" value="Cancelar" actionListener="#{usuarioBean.cancelar()}" 
+			    			styleClass="btn btn-default">
+						    <f:ajax />
+						</h:commandButton>
+					</b:column>
+				</b:row>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>
+</html>

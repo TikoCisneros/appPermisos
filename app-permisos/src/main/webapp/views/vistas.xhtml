@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="titulo">
+        Gesti&oacute;n de Vistas
+    </ui:define>
+	<ui:define name="contenido">
+		<h:form id="frmg">
+			<p:messages closable="true" id="msj"></p:messages>
+			<center>
+				<h1>VISTAS</h1>
+			</center>
+			<b:row>
+				<b:column span="1">
+					<b:commandButton value="Nuevo" iconAwesome="file-o"	action="#{vistasBean.nuevo()}" />
+				</b:column>
+				<b:column span="1">
+					<b:commandButton value="Volver" iconAwesome="angle-left" action="index?faces-redirect=true" />
+				</b:column>
+			</b:row>
+		</h:form>
+		<br />
+		<h:form id="frmlv">
+			<b:panel title="Listado" look="primary">
+				<p:dataTable id="tbb" value="#{vistasBean.listVistas}" var="vst" rows="8" emptyMessage="Sin Datos"
+				scrollable="true" scrollRows="20" liveScroll="true" paginator="true" 
+   				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+                    <p:column filterBy="#{vst.appModulo.appAplicacione.aplNombre}" headerText="APLICACI&Oacute;N" width="100">
+						<h:outputText value="#{vst.appModulo.appAplicacione.aplNombre}"></h:outputText>
+					</p:column>
+					<p:column filterBy="#{vst.appModulo.modNombre}" headerText="M&Oacute;DULO" width="100">
+						<h:outputText value="#{vst.appModulo.modNombre}"></h:outputText>
+					</p:column>
+					<p:column filterBy="#{vst.visNombre}" filterMatchMode="contains" headerText="NOMBRE" width="100">
+						<h:outputText value="#{vst.visNombre}"></h:outputText>
+					</p:column>
+					<p:column filterBy="#{vst.visOrden}" headerText="ORDEN" width="80">
+						<h:outputText value="#{vst.visOrden}"></h:outputText>
+					</p:column>
+					<p:column headerText="ESTADO" width="80">
+						<h:outputText value="#{vst.visEstado}"></h:outputText>
+					</p:column>
+					<p:column headerText="OPCIONES" width="100">
+						<p:commandButton id="btnE" icon="ui-icon-pencil" update=":frmvis" action="#{vistasBean.cargarDatos(vst)}">
+							<p:tooltip for="btnE" value="Editar Vista" trackMouse="true" />
+						</p:commandButton>
+					</p:column>
+   				</p:dataTable>
+   			</b:panel>
+		</h:form>
+		<p:dialog header="Formulario de Vistas" widgetVar="dlgvis" width="500" modal="true" resizable="false" closable="false"
+			position="top">
+			<h:form id="frmvis">
+				<p:messages closable="true" id="vismsj"></p:messages>
+				<b:row style="margin-bottom:10px;">
+					<b:column col-xs="3"><h:outputText value="Aplicaci&oacute;n*" /></b:column>
+					<b:column col-xs="9">
+						<p:selectOneMenu value="#{vistasBean.appId}" filter="true" filterMatchMode="contains" 
+							style="width:343px" disabled="#{vistasBean.edicion}">
+							<p:ajax update="frmvis"/>
+							<f:selectItems value="#{vistasBean.listApps()}"/>
+						</p:selectOneMenu>
+					</b:column>
+				</b:row>
+				<b:row style="margin-bottom:10px;">
+					<b:column col-xs="3"><h:outputText value="M&oacute;dulo*" /></b:column>
+					<b:column col-xs="9">
+						<p:selectOneMenu value="#{vistasBean.modulo}" filter="true" filterMatchMode="contains" 
+							id="mods" style="width:343px">
+							<p:ajax listener="#{vistasBean.sugerirOrden()}" update="frmvis"/>
+							<f:selectItems value="#{vistasBean.listModsApp()}"/>
+						</p:selectOneMenu>
+					</b:column>
+				</b:row>
+				<b:row>
+					<b:column col-xs="3"><h:outputText value="Prefijo*" /></b:column>
+					<b:column col-xs="9"><b:inputText value="#{vistasBean.prefijo}" placeholder="app_nombrevista" required="true" 
+						requiredMessage="Campo prefijo requerido" disabled="#{vistasBean.edicion}"/></b:column>
+				</b:row>
+				<b:row>
+					<b:column col-xs="3"><h:outputText value="Nombre*" /></b:column>
+					<b:column col-xs="9"><b:inputText value="#{vistasBean.nombre}" required="true" requiredMessage="Campo nombre requerido"/></b:column>
+				</b:row>
+				<b:row>
+					<b:column col-xs="3"><h:outputText value="Link*" /></b:column>
+					<b:column col-xs="9"><b:inputText value="#{vistasBean.link}" placeholder="vista.xhtml" required="true" requiredMessage="Campo link requerido"/></b:column>
+				</b:row>
+				<b:row>
+					<b:column col-xs="3"><h:outputText value="Orden*" /></b:column>
+					<b:column col-xs="9"><b:inputText id="ord" value="#{vistasBean.orden}" required="true" requiredMessage="Campo orden requerido"/></b:column>
+				</b:row>
+				<b:row style="margin-bottom:10px;">
+					<b:column col-xs="3"><h:outputText value="Descripci&oacute;n*" /></b:column>
+					<b:column col-xs="9">
+						<p:inputTextarea value="#{vistasBean.descripcion}" required="true" requiredMessage="Campo descripciÃ³n requerido" style="width:343px"/>
+					</b:column>
+				</b:row>
+				<b:row rendered="#{vistasBean.edicion}">
+					<b:column col-xs="3"><h:outputText value="Estado" /></b:column>
+					<b:column col-xs="9">
+						<b:selectOneMenu value="#{vistasBean.estado}">
+							<f:selectItems value="#{vistasBean.listEstados()}"/>
+						</b:selectOneMenu>
+					</b:column>
+				</b:row>
+				<b:row>
+					<b:column col-xs="2">
+						<p:commandButton value="Aceptar" actionListener="#{vistasBean.addModVista()}" style="padding: .4em 0em;" 
+	    				styleClass="btn-default" update="frmvis :frmvis:vismsj :frmg:msj :frmlv"/>
+					</b:column>
+					<b:column col-xs="2">
+						<h:commandButton type="button" value="Cancelar" actionListener="#{vistasBean.cancelar()}" 
+			    			styleClass="btn btn-default">
+						    <f:ajax />
+						</h:commandButton>
+					</b:column>
+				</b:row>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources xmlns="http://www.jboss.org/ironjacamar/schema">
+    <datasource 
+        jndi-name="appPermisosDatasource"
+        enabled="true" 
+        use-java-context="true" 
+        pool-name="appPermisosPool">
+        <connection-url>jdbc:postgresql://10.1.0.158:5432/app_permisos</connection-url>
+        <driver>postgresql-9.4.1207.jar</driver>
+        <pool>
+            <min-pool-size>2</min-pool-size>
+            <max-pool-size>10</max-pool-size>
+            <prefill>false</prefill>
+        </pool>
+        <security>
+            <user-name>app_permisos</user-name>
+            <password>N)mE14_fP!+]</password>
+        </security>
+        <validation>
+            <check-valid-connection-sql>SELECT 1</check-valid-connection-sql>
+            <valid-connection-checker
+                class-name="org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChecker">
+            </valid-connection-checker>
+            <exception-sorter
+                class-name="org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLExceptionSorter">
+            </exception-sorter>
+        </validation>
+
+    </datasource>
+</datasources>
+

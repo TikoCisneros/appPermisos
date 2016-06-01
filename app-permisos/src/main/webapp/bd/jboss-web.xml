@@ -1,0 +1,4 @@
+<jboss-web>
+    <virtual-host>app-permisos.yachay.gob.ec</virtual-host>
+    <context-root>/</context-root>
+</jboss-web>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui">
+
+	<ui:composition template="template.xhtml">
+		<ui:define name="titulo">
+	        Asignaci&oacute;n de Perfil a Usuario
+	    </ui:define>
+		<ui:define name="contenido">
+			<h:form id="frmpu">
+				<p:messages id="growl" closable="true"/>
+				<b:panel title="Asignaci&oacute;n de Perfil a Usuario" look="primary">
+					<b:row style="margin-bottom:10px;">
+						<b:column span="2"><h:outputText value="Usuario*" /></b:column>
+						<b:column span="4">
+							<p:autoComplete id="acUsuario" minQueryLength="2"
+								value="#{perfusrBean.usuario}"
+								completeMethod="#{perfusrBean.completeUsuario}" 
+								var="c" itemValue="#{c}"
+								itemLabel="#{c.usuLogin}" 
+								converter="usuarioConverter"
+								forceSelection="false" inputStyle="width:300px; padding:8px; font-size:14px;margin-bottom:15px;">
+								<p:column><h:outputText value="#{c.usuLogin}" /></p:column>
+								<p:column style="width:200px"><h:outputText value="#{c.perId}" /></p:column>
+								<f:ajax event="itemSelect" listener="#{perfusrBean.liberarDatos()}" render="frmpu"/>
+							</p:autoComplete>
+						</b:column>
+					</b:row>
+					<b:row style="margin-bottom:10px;">
+						<b:column span="2"><h:outputText value="Perfil*" /></b:column>
+						<b:column span="4">
+							<p:selectOneMenu value="#{perfusrBean.perfId}" filter="true" filterMatchMode="contains" 
+								id="apps" style="width:300px;">
+								<p:ajax listener="#{perfusrBean.cargarDatos()}" update="frmpu"/>
+								<f:selectItems value="#{perfusrBean.listaPerfiles()}"/>
+							</p:selectOneMenu>
+						</b:column>
+					</b:row>
+					<center>
+						<b:row style="margin-bottom:10px;">
+							<b:column span="1" />
+							<b:column span="4">
+								<h:panelGrid columns="1">
+									<h:outputLabel value="Permisos Perfil" style="text-align:center;width:100%;"/>
+									<p:tree value="#{perfusrBean.pLibres}" var="vl" style="text-align:left;min-height:100px;">
+										<p:treeNode>
+								            <h:outputText value="#{vl}"/>
+								        </p:treeNode>
+									</p:tree>
+								</h:panelGrid>
+							</b:column>
+							<b:column span="2" />
+							<b:column span="4">
+								<h:panelGrid columns="1">
+									<h:outputLabel value="Permisos Usuario" style="text-align:center;width:100%;"/>
+									<p:tree value="#{perfusrBean.pAsignados}" var="va" style="text-align:left;min-height:100px;">
+										<p:treeNode>
+								            <h:outputText value="#{va}"/>
+								        </p:treeNode>
+									</p:tree>
+								</h:panelGrid>
+							</b:column>
+							<b:column span="1" />
+						</b:row>						
+					</center>
+					<b:row>
+						<b:column span="1">
+							<b:commandButton value="Aceptar" action="#{perfusrBean.aceptar()}" look="info"/>
+						</b:column>
+						<b:column span="1">
+							<h:commandButton type="button" value="Cancelar" action="index?faces-redirect=true" 
+				    			styleClass="btn btn-info">
+							    <f:ajax />
+							</h:commandButton>   
+					    </b:column>
+					</b:row>
+				</b:panel>
+			</h:form>
+			<p:confirmDialog header="Confirmaci&oacute;n" message="Esta seguro de asignar permisos?" closable="false" showEffect="fade" hideEffect="explode" widgetVar="cd">
+	       		<h:form>
+	       		<center>
+	       			<p:commandButton value="Si" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" oncomplete="PF('cd').hide()" 
+	       			actionListener="#{perfusrBean.ingresarPermisos()}" update=":frmpu"/>&nbsp;&nbsp;&nbsp;
+	        		<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('cd').hide()"/>
+	       		</center>
+	       		</h:form>
+	       	</p:confirmDialog>
+		</ui:define>
+	</ui:composition>
+</html>

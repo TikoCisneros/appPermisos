@@ -1,0 +1,35 @@
+/*****PRIMEFACES*******/
+.ui-button{
+	font-size: 15px;
+}
+
+/*****BOOSTSFACES*******/
+/* .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.active>a{
+  background-image: -webkit-linear-gradient(top,#178acc 0,#337ab7 100%);
+  background-image: -o-linear-gradient(top,#178acc 0,#337ab7 100%);
+  background-image: linear-gradient(to bottom,#178acc 0,#337ab7 100%);
+}
+
+.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.active>a{
+  background-image: -webkit-linear-gradient(top,#04519B 0,#033769 100%);
+  background-image: -o-linear-gradient(top,#04519B 0,#033769 100%);
+  background-image: linear-gradient(to bottom,#04519B 0,#033769 100%);
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  background-color: #337ab7;
+  background-image: -webkit-linear-gradient(top, #178acc 0%, #337ab7 100%);
+  background-image:      -o-linear-gradient(top, #178acc 0%, #337ab7 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#178acc), to(#337ab7));
+  background-image:         linear-gradient(to bottom, #178acc 0%, #337ab7 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff178acc', endColorstr='#ff337ab7', GradientType=0);
+  background-repeat: repeat-x;
+} */
+
+.panel-heading a:after {
+    font-family:'Glyphicons Halflings';
+    content:"\e114";
+    float: right;
+    color: #fff;
+}
